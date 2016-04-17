@@ -1,8 +1,23 @@
-<!doctype html>
-<head>
-<!--
-<meta http-equiv=refresh content="0; url=http://[2400:6180:0:d0::17d:e001]:57675/" />
-<meta http-equiv=refresh content="0; url=http://128.199.246.30:57675/" />
--->
-<meta http-equiv=refresh content="0; url=http://128.199.246.30:57675/" />
-</head>
+#!/usr/bin/env python2
+# vim: set noet ts=4 sw=4 fileencoding=utf-8:
+
+import socket
+import sys
+
+if __name__=='__main__':
+	assert len(sys.argv) == 2
+
+	PORT = 12345
+	if sys.argv[1]=='client':
+		s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+		s.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+		for i in range(15):
+			s.sendto('blabla', ('255.255.255.255', PORT))
+	elif sys.argv[1]=='server':
+		s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+		s.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+		s.bind(('', PORT))
+		print 'listening...'
+		while True:
+			m = s.recvfrom(1000)
+			print m
